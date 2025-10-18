@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>R F Bot Chat</title>
+<style>
+  body { font-family: Arial; background:#121212; color:white; text-align:center; }
+  #chatbox { width:90%; max-width:600px; margin:20px auto; background:#1e1e1e; padding:20px; border-radius:12px; }
+  .msg { text-align:left; margin:10px 0; }
+  .bot { color:#0f0; }
+  input { width:80%; padding:10px; border-radius:10px; border:none; outline:none; }
+  button { padding:10px 15px; background:#0f0; border:none; border-radius:10px; }
+</style>
+</head>
+<body>
+  <h2>🤖 R F Bot</h2>
+  <div id="chatbox"></div>
+  <input id="userInput" placeholder="Type a message..." />
+  <button onclick="sendMsg()">Send</button>
+
+<script>
+async function sendMsg() {
+  const input = document.getElementById("userInput");
+  const chat = document.getElementById("chatbox");
+  const userMsg = input.value;
+  if(!userMsg) return;
+  chat.innerHTML += `<div class='msg'><b>You:</b> ${userMsg}</div>`;
+  input.value = "";
+  const res = await fetch("/chat", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:userMsg})
+  });
+  const data = await res.json();
+  chat.innerHTML += `<div class='msg bot'><b>R F Bot:</b> ${data.reply}</div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+</body>
+</html>
